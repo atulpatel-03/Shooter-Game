@@ -130,7 +130,7 @@ const makeGame = (k) => {
 
             if (enemy.pos.y >= k.height()) {  // Enemy moves off the bottom of the screen based on dynamic height
                 k.destroy(enemy);
-                makeEnemy(k);
+                makeEnemy();
             }
 
             if (enemy.fireTimer >= enemy.fireTime) {
