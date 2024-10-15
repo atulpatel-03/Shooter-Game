@@ -1,9 +1,10 @@
 const makeGame = (k) =>{
-    return k.scene('game', ()=> {
-        const music = k.play('bg', { volume: 0.8, loop: true});
-        k.add([
+    return k.scene("game", ()=> {
+        const music = k.play("bg", { volume: 0.1, loop: true});
+        
+        const background = k.add([
             k.pos(0,0),
-            k.sprite('background', { width: 1280, height: 720, tiled: true}),
+            k.sprite("background", { width: 1280, height: 720, tiled: true}),
             k.scale(4),
         ]);
 
@@ -11,14 +12,17 @@ const makeGame = (k) =>{
             k.pos(0,0),
             k.rect(1280, 64),
             k.outline(4),
-            k.color(k.Color.fromHex('#071821')),
+            k.color(k.Color.fromHex("#071821")),
             k.z(10),
         ]);
 
         const score = k.add([
             k.pos(20,20),
-            k.color(k.Color.fromHex('#e0f8cf')),
-            k.text("Score: 0", { size: 32, font: 'press2p'}),
+            k.color(k.Color.fromHex("#e0f8cf")),
+            k.text("Score: 0", { 
+                size: 32, 
+                font: 'press2p'
+            }),
             k.z(10),
             {value: 0}
         ]);
@@ -37,17 +41,17 @@ const makeGame = (k) =>{
         const makeEnemy = () =>{
             return k.add([
                 k.pos(k.rand(k.vec2(k.width,0))),
-                k.sprite('enemy'),
-                k.anchor('center'),
+                k.sprite("enemy"),
                 k.area(),
+                k.anchor("center"),
                 k.scale(4),
                 {
                     speed: 300,
                     fireTimer: 0,
                     fireTime: k.rand(10, 100),
                 },
-                'enemy',
-            ])
+                "enemy",
+            ]);
         }
 
         makeEnemy();
@@ -56,7 +60,7 @@ const makeGame = (k) =>{
         makeEnemy();
         makeEnemy();
 
-        k.onKeyDown('left', ()=>{
+        k.onKeyDown("left", ()=>{
             player.move(-player.speed, 0);
             if(player.pos.x <= 32){
                 player.pos.x = 32;
@@ -85,16 +89,16 @@ const makeGame = (k) =>{
         })
 
         k.onKeyPress('space', ()=>{
-            k.play('laser', {volume: 0.3}),
+            k.play("laser", {volume: 0.3}),
             k.add([
-                k.sprite('laser'),
                 k.pos(player.pos.x, player.pos.y - 64),
+                k.sprite("laser"),
                 k.area(),
-                k.anchor('center'), 
+                k.anchor("center"), 
                 k.offscreen({ destroy: true}),
                 k.scale(4),
                 {
-                    speed: 800,
+                    speed: 1000,
                 },
                 "laser",
             ])
@@ -114,29 +118,29 @@ const makeGame = (k) =>{
 
             if(enemy.pos.y >= 784){
                 k.destroy(enemy);
-                makeEnemy();
+                makeEnemy(k);
             }
 
             if(enemy.fireTimer >= enemy.fireTime){
-                k.play('bullet', { volume: 0.3}),
+                k.play("bullet", { volume: 0.3}),
                 k.add([
-                    k.sprite('bullet'),
                     k.pos(enemy.pos.x, enemy.pos.y + 32),
-                    k.anchor('center'),
+                    k.sprite("bullet"),
                     k.area(),
+                    k.anchor('center'),
                     k.offscreen({destroy: true}),
                     k.scale(4),
                     {
                         speed: 500,
                     },
-                    'bullet',
+                    "bullet",
                 ]);
                 enemy.fireTimer = 0;
             }
         });
 
-        k.onCollide('laser', 'enemy', (laser, enemy) =>{
-            k.play('explode', { volume : 0.6}),
+        k.onCollide("laser", "enemy", (laser, enemy) =>{
+            k.play("explode", { volume : 0.6}),
             score.value += 1;
             score.text = 'Score: ' + score.value;
             k.destroy(enemy);
@@ -144,20 +148,20 @@ const makeGame = (k) =>{
             makeEnemy();
         });
 
-        k.onCollide('player', 'enemy', (player, enemy) =>{
+        k.onCollide("player", "enemy", (player, enemy) =>{
             k.destroy(enemy);
             k.destroy(player);
-            k.play('explode');
+            k.play("explode");
             music.stop();
-            k.go('gameOver');
+            k.go("gameOver");
         });
 
-        k.onCollide('player', 'bullet', (player, bullet) =>{
+        k.onCollide("player", "bullet", (player, bullet) =>{
             k.destroy(bullet);
             k.destroy(player);
-            k.play('explode');
+            k.play("explode");
             music.stop();
-            k.go('gameOver');
+            k.go("gameOver");
         });
 
     });
