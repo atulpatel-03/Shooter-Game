@@ -7,14 +7,19 @@ import makeGameOver from "./makeGameOver";
 
 const k = kaplay({
 	global: false,
-	width: 1280,
-	height: 720,
+	width: window.innerWidth,  // Set width to match the window width
+	height: window.innerHeight, // Set height to match the window height
 	canvas: document.getElementById("game"),
-	letterbox: true,
 	texFilter: "nearest",
-})
+	background: '#071821',
+});
 
-k.setBackground(k.Color.fromHex('#071821'))
+// Handle resizing of the window
+window.addEventListener('resize', () => {
+    k.width = window.innerWidth;  // Update canvas width
+    k.height = window.innerHeight; // Update canvas height
+    k.scale(); // Recalculate the canvas scaling
+});
 
 loadAssets(k);
 makeMenu(k);
